@@ -9,7 +9,7 @@ pub type BoardError {
   EmptyName
 }
 
-pub type BoardId {
+pub opaque type BoardId {
   BoardId(id: String)
 }
 
