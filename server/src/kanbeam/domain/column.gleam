@@ -36,3 +36,19 @@ pub fn new(
       Ok(Column(column_id_from_string(trim_id), board_id, trim_name, position))
   }
 }
+
+pub fn id(column: Column) -> ColumnId {
+  column.id
+}
+
+pub fn board_id(column: Column) -> board.BoardId {
+  column.board_id
+}
+
+pub fn name(column: Column) -> String {
+  column.name
+}
+
+pub fn position(column: Column) -> Int {
+  column.position
+}
