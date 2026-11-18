@@ -47,3 +47,27 @@ pub fn new(
       Ok(Task(id, column_id, title, description, priority, position))
   }
 }
+
+pub fn priority(task: Task) -> Priority {
+  task.priority
+}
+
+pub fn title(task: Task) -> String {
+  task.title
+}
+
+pub fn description(task: Task) -> String {
+  task.description
+}
+
+pub fn id(task: Task) -> TaskId {
+  task.id
+}
+
+pub fn position(task: Task) -> Int {
+  task.position
+}
+
+pub fn column_id(task: Task) -> column.ColumnId {
+  task.column_id
+}
