@@ -15,25 +15,20 @@ pub type ColumnError {
   InvalidPosition
 }
 
-fn column_id_from_string(id: String) -> ColumnId {
-  id |> ColumnId
-}
-
 pub fn new(
   id: String,
   board_id: board.BoardId,
   name: String,
   position: Int,
 ) -> Result(Column, ColumnError) {
-  let trim_name = string.trim(name)
-  let trim_id = string.trim(id)
+  let name = string.trim(name)
+  let id = string.trim(id) |> ColumnId
 
-  case string.is_empty(trim_id), string.is_empty(trim_name), position < 0 {
+  case string.is_empty(id.id), string.is_empty(name), position < 0 {
     True, _, _ -> Error(EmptyId)
     _, True, _ -> Error(EmptyName)
     _, _, True -> Error(InvalidPosition)
-    False, False, False ->
-      Ok(Column(column_id_from_string(trim_id), board_id, trim_name, position))
+    False, False, False -> Ok(Column(id, board_id, name, position))
   }
 }
 

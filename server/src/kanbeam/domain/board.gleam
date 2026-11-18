@@ -14,21 +14,17 @@ pub opaque type BoardId {
 }
 
 pub fn new(id: String, name: String) -> Result(Board, BoardError) {
-  let trim_name = string.trim(name)
-  let trim_id = string.trim(id)
-  case string.is_empty(trim_id), string.is_empty(trim_name) {
+  let name = string.trim(name)
+  let id = string.trim(id) |> BoardId
+  case string.is_empty(id.id), string.is_empty(name) {
     True, _ -> Error(EmptyId)
     _, True -> Error(EmptyName)
-    False, False -> Ok(Board(board_id_from_string(trim_id), trim_name))
+    False, False -> Ok(Board(id, name))
   }
 }
 
 pub fn id(board: Board) -> BoardId {
   board.id
-}
-
-fn board_id_from_string(id: String) -> BoardId {
-  id |> BoardId
 }
 
 pub fn name(board: Board) -> String {
