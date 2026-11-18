@@ -71,3 +71,27 @@ pub fn position(task: Task) -> Int {
 pub fn column_id(task: Task) -> column.ColumnId {
   task.column_id
 }
+
+pub fn rename(task: Task, new_title: String) -> Result(Task, TaskError) {
+  let new_title = string.trim(new_title)
+
+  case string.is_empty(new_title) {
+    True -> Error(EmptyTitle)
+    _ -> Ok(Task(..task, title: new_title))
+  }
+}
+
+pub fn change_priority(task: Task, new_priority: Priority) -> Task {
+  Task(..task, priority: new_priority)
+}
+
+pub fn move(
+  task: Task,
+  to: column.ColumnId,
+  position: Int,
+) -> Result(Task, TaskError) {
+  case position < 0 {
+    True -> Error(InvalidPosition)
+    _ -> Ok(Task(..task, column_id: to, position:))
+  }
+}

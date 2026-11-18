@@ -32,9 +32,9 @@ pub fn name(board: Board) -> String {
 }
 
 pub fn rename(board: Board, new_name: String) -> Result(Board, BoardError) {
-  let trim_name = string.trim(new_name)
-  case string.is_empty(trim_name) {
+  let new_name = string.trim(new_name)
+  case string.is_empty(new_name) {
     True -> Error(EmptyName)
-    _ -> Ok(Board(..board, name: trim_name))
+    _ -> Ok(Board(..board, name: new_name))
   }
 }
