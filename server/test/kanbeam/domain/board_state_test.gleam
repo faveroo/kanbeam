@@ -19,11 +19,7 @@ fn make_column(
   created
 }
 
-fn make_task(
-  id: String,
-  parent: column.Column,
-  position: Int,
-) -> task.Task {
+fn make_task(id: String, parent: column.Column, position: Int) -> task.Task {
   let assert Ok(created) =
     task.new(
       id,
@@ -36,20 +32,16 @@ fn make_task(
   created
 }
 
-fn fixture() -> #(
-  board.Board,
-  List(column.Column),
-  List(task.Task),
-) {
+fn fixture() -> #(board.Board, List(column.Column), List(task.Task)) {
   let parent = make_board("board-1")
-  let todo = make_column("todo", parent, 0)
+  let to_do = make_column("todo", parent, 0)
   let doing = make_column("doing", parent, 1)
   let tasks = [
-    make_task("task-1", todo, 0),
-    make_task("task-2", todo, 1),
+    make_task("task-1", to_do, 0),
+    make_task("task-2", to_do, 1),
     make_task("task-3", doing, 0),
   ]
-  #(parent, [todo, doing], tasks)
+  #(parent, [to_do, doing], tasks)
 }
 
 pub fn creates_empty_board_state_test() {
@@ -176,10 +168,11 @@ pub fn columns_getter_preserves_input_order_test() {
   let #(parent, columns, tasks) = fixture()
   let assert Ok(state) = board_state.new(parent, columns, tasks)
 
-  assert list.map(board_state.columns(state), column.name) == [
-    "Column todo",
-    "Column doing",
-  ]
+  assert list.map(board_state.columns(state), column.name)
+    == [
+      "Column todo",
+      "Column doing",
+    ]
   assert list.map(board_state.columns(state), column.position) == [0, 1]
 }
 
@@ -188,17 +181,19 @@ pub fn tasks_getter_preserves_input_order_and_fields_test() {
   let assert Ok(state) = board_state.new(parent, columns, tasks)
   let returned = board_state.tasks(state)
 
-  assert list.map(returned, task.title) == [
-    "Task task-1",
-    "Task task-2",
-    "Task task-3",
-  ]
+  assert list.map(returned, task.title)
+    == [
+      "Task task-1",
+      "Task task-2",
+      "Task task-3",
+    ]
   assert list.map(returned, task.position) == [0, 1, 0]
-  assert list.map(returned, task.description) == [
-    "Description task-1",
-    "Description task-2",
-    "Description task-3",
-  ]
+  assert list.map(returned, task.description)
+    == [
+      "Description task-1",
+      "Description task-2",
+      "Description task-3",
+    ]
   assert list.all(returned, fn(current) {
     task.priority(current) == task.Medium
   })
