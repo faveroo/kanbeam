@@ -29,16 +29,16 @@ pub fn actor_counter_increments_test() {
 
   let subject = started.data
 
-  process.send(subject, Increment)
-  process.send(subject, Increment)
+  actor.send(subject, Increment)
+  actor.send(subject, Increment)
 
   let reply_to = process.new_subject()
 
-  process.send(subject, GetCount(reply_to))
+  actor.send(subject, GetCount(reply_to))
 
   let count = process.receive(reply_to, 1000)
 
   assert count == Ok(2)
 
-  process.send(subject, Stop)
+  actor.send(subject, Stop)
 }
