@@ -1,0 +1,44 @@
+import gleam/erlang/process
+import gleam/otp/actor
+
+pub type CounterMessage {
+  Increment
+  GetCount(reply_to: process.Subject(Int))
+  Stop
+}
+
+fn handle_message(
+  count: Int,
+  message: CounterMessage,
+) -> actor.Next(Int, CounterMessage) {
+  case message {
+    Increment -> actor.continue(count + 1)
+    GetCount(reply_to) -> {
+      actor.send(reply_to, count)
+      actor.continue(count)
+    }
+    Stop -> actor.stop()
+  }
+}
+
+pub fn actor_counter_increments_test() {
+  let assert Ok(started) =
+    actor.new(0)
+    |> actor.on_message(handle_message)
+    |> actor.start()
+
+  let subject = started.data
+
+  process.send(subject, Increment)
+  process.send(subject, Increment)
+
+  let reply_to = process.new_subject()
+
+  process.send(subject, GetCount(reply_to))
+
+  let count = process.receive(reply_to, 1000)
+
+  assert count == Ok(2)
+
+  process.send(subject, Stop)
+}
