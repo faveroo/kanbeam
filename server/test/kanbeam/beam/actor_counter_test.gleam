@@ -42,3 +42,24 @@ pub fn actor_counter_increments_test() {
 
   actor.send(subject, Stop)
 }
+
+pub fn actor_counter_stops_normally_test() {
+  let assert Ok(started) =
+    actor.new(0)
+    |> actor.on_message(handle_message)
+    |> actor.start()
+
+  let subject = started.data
+
+  let monitor = process.monitor(started.pid)
+  let selector =
+    process.new_selector()
+    |> process.select_specific_monitor(monitor, fn(down) { down })
+
+  process.send(subject, Stop)
+
+  let received = process.selector_receive(selector, 1000)
+
+  assert received
+    == Ok(process.ProcessDown(monitor, started.pid, process.Normal))
+}
